@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: semi-food
+    runtime: docker
+    repo: https://github.com/woorisx/semi_food.git
+    branch: main
+    plan: free
+    region: singapore
+    autoDeployTrigger: commit
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: LOG_LEVEL
+        value: INFO
+      - key: FLYWAY_LOG_LEVEL
+        value: INFO
+      - key: JWT_EXPIRY_SECONDS
+        value: 7200
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TIDB_URL
+        sync: false
+      - key: TIDB_USERNAME
+        sync: false
+      - key: TIDB_PASSWORD
+        sync: false
+      - key: EMAIL_ADDR
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: AUTO_ORDER_ENABLED
+        value: "0"
+      - key: RPA_SCHEDULER_ENABLED
+        value: "0"
+      - key: RPA_RECOVERY_ENABLED
+        value: "0"
+      - key: RPA_RECOVERY_FIXED_DELAY_MS
+        value: 300000

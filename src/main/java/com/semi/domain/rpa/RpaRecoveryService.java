@@ -3,6 +3,7 @@ package com.semi.domain.rpa;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,15 @@ public class RpaRecoveryService {
 
     private final RpaLogRepository rpaLogRepository;
 
+    @Value("${rpa.recovery.enabled:false}")
+    private boolean recoveryEnabled;
+
     @Scheduled(fixedDelayString = "${rpa.recovery.fixed-delay-ms:300000}")
     public void recoverStaleRunningLogsOnSchedule() {
+        if (!recoveryEnabled) {
+            return;
+        }
+
         RpaRecoveryResponse response = recoverStaleRunningLogs(DEFAULT_STALE_MINUTES);
         if (response.recoveredCount() > 0) {
             log.warn("장시간 RUNNING RPA 로그 자동 복구: {}건", response.recoveredCount());

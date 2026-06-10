@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,17 @@ public class RpaAutoRunService {
     private final RpaAsyncExecutionService rpaAsyncExecutionService;
     private final RpaLogRepository rpaLogRepository;
 
+    @Value("${rpa.scheduler.enabled:false}")
+    private boolean schedulerEnabled;
+
     private LocalDateTime lastRunDayTime = null;
 
     @Scheduled(cron = "0 * * * * *")
     public void checkAndRunRpaSchedule() {
+        if (!schedulerEnabled) {
+            return;
+        }
+
         RpaConfig config = rpaConfigRepository.findById(1L).orElse(null);
         if (config == null || !config.isAutoRunEnabled()) {
             return;
