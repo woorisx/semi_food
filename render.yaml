@@ -20,7 +20,7 @@ services:
       - key: JWT_EXPIRY_SECONDS
         value: 7200
       - key: JWT_SECRET
-        generateValue: true
+        sync: false
       - key: TIDB_URL
         sync: false
       - key: TIDB_USERNAME
